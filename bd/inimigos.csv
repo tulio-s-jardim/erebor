@@ -1,0 +1,21 @@
+id,nome,hp_maximo,hp,dano,mult_magico,mult_fisico,exp_concedida
+1,Draug,150,150,25,1,1,7
+2,Smeagle,100,100,15,1,1,5
+3,Kael,150,150,20,1,2,8
+4,"Tiron da Selva Abrasada",175,175,25,2,1,8
+5,"Assora o Destruidor ",175,175,25,2,1,8
+6,"Rei Bruxo",150,150,25,1,2,10
+7,"Aela a Precussora",100,100,35,1,3,10
+8,"Vrim Martelo Esmagador",100,100,35,1,2,8
+9,Draktar,200,200,35,1,2,10
+10,"Arquimedes Rei Mago",200,200,35,2,1,15
+11,"Abalon da Caçada Selvagem",250,250,40,1,1,15
+12,"Godim o Ogro",250,250,30,1,1,17
+13,"Troll Selvagem",150,150,40,1,2,20
+14,"Espírito da Escuridão",200,200,25,2,1,17
+15,"Teth Arranca Ossos",400,400,45,1,1,25
+16,"Anabel Olho Voraz",400,400,45,1,2,25
+17,"Aurelien Lua",350,350,40,2,1,25
+18,"Armin Menestral da Morte",400,400,50,1,1,25
+19,"Atchim o Espirro",300,300,40,2,1,25
+20,"Tanael Deus da Perdição",450,450,50,1,2,30
