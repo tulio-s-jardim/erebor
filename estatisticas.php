@@ -1,7 +1,7 @@
 <?php
 require_once 'php/usuario.php';
+require_once 'session_u.php';
 
-$usuario = new Usuario();
 $u = $usuario->view();
 $p = $usuario->viewAtivo();
 
@@ -10,10 +10,10 @@ include_once 'header.php';
 		<ul class="nav menu">
 			<li><a href="index.php"><em class="fa fa-address-card">&nbsp;</em> Home</a></li>
 			<li><a href="personagens.php"><em class="fa fa-address-book">&nbsp;</em> Personagens</a></li>
-			<li><a href="atributos.php"><em class="fa fa-diagnoses">&nbsp;</em> Habilidades/Atributos</a></li>
+			<li><a href="atributos.php"><em class="fa fa-diagnoses">&nbsp;</em> Atributos</a></li>
 			<li><a href="cenarios.php"><em class="fa fa-map-marked-alt">&nbsp;</em> Cenários</a></li>
 			<li class="active"><a href="estatisticas.php"><em class="fa fa-chart-bar">&nbsp;</em> Estatísticas</a></li>
-			<li><a href="login.html"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
+			<li><a href="login.php"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
 		</ul>
 	</div><!--/.sidebar-->
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">

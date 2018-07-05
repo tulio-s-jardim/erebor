@@ -1,7 +1,7 @@
 <?php
 require_once 'php/usuario.php';
+require_once 'session_u.php';
 
-$usuario = new Usuario();
 $u = $usuario->view();
 $p = $usuario->viewAtivo();
 $prs = $usuario->viewPersonagens();
@@ -44,21 +44,16 @@ if(isset($_POST['edit'])) {
 
 include_once 'header.php';
 ?>
-		<?php if(empty($p->id)) { ?>
-		<script type="text/javascript">
-			function refresh() {
-				location.href = "personagens.php";
-			}
-			window.onload = refresh;
-		</script>
-		<?php } ?>
+		<?php if(empty($p->id)) { 
+    		header('Location: personagens.php');
+    	} ?>
 		<ul class="nav menu">
 			<li class="active"><a href="index.php"><em class="fa fa-address-card">&nbsp;</em> Home</a></li>
 			<li><a href="personagens.php"><em class="fa fa-address-book">&nbsp;</em> Personagens</a></li>
-			<li><a href="atributos.php"><em class="fa fa-diagnoses">&nbsp;</em> Habilidades/Atributos</a></li>
+			<li><a href="atributos.php"><em class="fa fa-diagnoses">&nbsp;</em> Atributos</a></li>
 			<li><a href="cenarios.php"><em class="fa fa-map-marked-alt">&nbsp;</em> Cenários</a></li>
 			<li><a href="estatisticas.php"><em class="fa fa-chart-bar">&nbsp;</em> Estatísticas</a></li>
-			<li><a href="login.html"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
+			<li><a href="login.php"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
 		</ul>
 	</div><!--/.sidebar-->
 	
@@ -99,7 +94,7 @@ include_once 'header.php';
 								</div>
 								<div class="row progress-labels">
 									<div class="col-sm-6"><?php echo $prs[$i]->raca; ?></div>
-									<div class="col-sm-6" style="text-align: right;"><?php echo $prs[$i]->experiencia; ?>%</div>
+									<div class="col-sm-6" style="text-align: right;"><?php echo round(($prs[$i]->experiencia*100)/(100 + 30*($prs[$i]->nivel-1) + 3*($prs[$i]->nivel-1)*($prs[$i]->nivel-1))); ?>%</div>
 								</div>
 								<div class="progress">
 									<div data-percentage="0%" style="width: <?php echo $prs[$i]->experiencia; ?>%;" class="progress-bar progress-bar-blue" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -109,7 +104,7 @@ include_once 'header.php';
 						</div>
 					</div>
 					<form name="login" method="post" action="index.php" enctype="multipart/form-data">
-						<?php if($u->login_diario == 0) echo "<p>Recompensa diária recebido por hoje.</p>"; ?>
+						<?php if($u->login_diario == 0) echo "<p>Recompensa diária recebida por hoje.</p>"; ?>
 						<button name="login" type="submit" class="btn btn-lg btn-success" <?php if($u->login_diario == 0) echo "disabled" ?> >Recompensa Diária</button>
 						<button type="button" class="btn btn-lg btn-primary" onclick="location.href = 'editarPerfil.php';">Editar Perfil</button>
 					</form>

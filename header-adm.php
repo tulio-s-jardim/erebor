@@ -1,8 +1,4 @@
 <?php
-require_once 'php/usuario.php';
-
-$usuario = new Usuario();
-
 if(isset($_POST['query'])) {
     $stmt = $usuario->conn->prepare($_POST['query']);
     $stmt->execute();

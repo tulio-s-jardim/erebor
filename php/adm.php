@@ -296,7 +296,7 @@ class Admin {
 
 
     public function iInsert($nome, $hp, $dano, $mult_magico, $mult_fisico, $exp_concedida) {
-        $query = "INSERT INTO inimigo(nome, hp_maximo, hp, dano, mult_magico, mult_fisico, exp_concedida) VALUES (:nome, :hp, :hp, :dano, :mult_magico, :mult_fisico, :exp_concedida);";
+        $query = "INSERT INTO inimigo(nome, hp_maximo, dano, mult_magico, mult_fisico, exp_concedida) VALUES (:nome, :hp, :dano, :mult_magico, :mult_fisico, :exp_concedida);";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":nome", $nome);
         $stmt->bindParam(":hp", $hp);
@@ -314,7 +314,7 @@ class Admin {
     }
 
     public function iEdit($id, $nome, $hp, $dano, $mult_magico, $mult_fisico, $exp_concedida) {
-        $query = "UPDATE inimigo SET id = :id, nome = :nome, hp_maximo = :hp, hp = :hp, dano = :dano, mult_magico = :mult_magico, mult_fisico = :mult_fisico, exp_concedida = :exp_concedida  WHERE id = :id ;";
+        $query = "UPDATE inimigo SET id = :id, nome = :nome, hp_maximo = :hp, dano = :dano, mult_magico = :mult_magico, mult_fisico = :mult_fisico, exp_concedida = :exp_concedida  WHERE id = :id ;";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $id);
         $stmt->bindParam(":nome", $nome);
@@ -346,7 +346,7 @@ class Admin {
     }
 
     public function inimigoView() {
-        $query = "SELECT * FROM `inimigo`;";
+        $query = "SELECT * FROM `inimigo` ORDER BY exp_concedida;";
         $stmt = $this->conn->prepare($query);
         try {
             $stmt->execute();

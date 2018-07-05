@@ -1,7 +1,4 @@
 <?php
-require_once 'php/usuario.php';
-
-$usuario = new Usuario();
 
 if(isset($_POST['query'])) {
     $stmt = $usuario->conn->prepare($_POST['query']);
@@ -35,7 +32,7 @@ if(isset($_POST['query'])) {
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span></button>
-				<a class="navbar-brand" href="index.php"><span>Dragão de</span> Erebor</a>
+				<a class="navbar-brand" href="index.php"><span>Dragão de</span> Erebor</a><br><?php if($usuario->admin()) echo '<a class="tag3" href="adm.php">ÁREA ADMIN</a>' ;?>
 			</div>
 		</div><!-- /.container-fluid -->
 	</nav>

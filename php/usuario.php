@@ -4,7 +4,7 @@ require_once 'php/database.php';
 
 class Usuario {
 
-    private $id = 1;
+    private $id;
     private $nome;
     private $email;
     private $senha;
@@ -49,6 +49,21 @@ class Usuario {
         return 1;
     }
 
+    public function insert(){
+        $query = "INSERT INTO usuario(nome, email, senha) VALUES (:nome, :email, :senha)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":nome", $this->nome);
+        $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":senha", $this->senha);
+        try { 
+            $stmt->execute();
+            return 1;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            return 0;
+        }            
+    }
+
     public function edit(){
         $query = "UPDATE `usuario` SET `email` = :email, `senha` = :senha, `end_avatar` = :end_avatar WHERE `id` = :id ;";
         $stmt = $this->conn->prepare($query);
@@ -67,7 +82,7 @@ class Usuario {
 
     public function loginDiario(){
         $query = "UPDATE `usuario` SET `login_diario` = 0 WHERE `id` = :id ;
-                  UPDATE `personagem` SET `experiencia` = `experiencia` + 35 WHERE `personagem`.`usuario_id` = :id";
+                  UPDATE `personagem` SET `experiencia` = `experiencia` + 35 WHERE `personagem`.`usuario_id` = :id AND `personagem`.`ativo` <> -1;";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         try { 
@@ -272,7 +287,7 @@ class Usuario {
         }
     }
 
-    public function combate($danoi, $mana, $dano, $inimigo, $id, $uid) {
+    public function combate($danoi, $mana, $dano, $inimigo) {
         $query = "UPDATE personagem
                   SET hp = hp - :danoi 
                   WHERE id = :id;
@@ -289,8 +304,8 @@ class Usuario {
         $stmt->bindParam(":mana", $mana);
         $stmt->bindParam(":dano", $dano);
         $stmt->bindParam(":inimigo", $inimigo);
-        $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":uid", $uid);
+        $stmt->bindParam(":id", $this->viewAtivo()->id);
+        $stmt->bindParam(":uid", $this->id);
         try {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_OBJ);
@@ -301,7 +316,7 @@ class Usuario {
     }
 
     public function cenarios() {
-        $query = "SELECT * FROM cenario;";
+        $query = "SELECT * FROM cenario ORDER BY dificuldade;";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         try {
@@ -354,15 +369,15 @@ class Usuario {
         }
     }
 
-    public function vEvent($iid, $uid) {
+    public function vEvent($iid) {
         $query = "SELECT count(*) AS c FROM versus WHERE usuario_id = :uid AND inimigo_id = :iid ;";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":uid", $uid);
+        $stmt->bindParam(":uid", $this->id);
         $stmt->bindParam(":iid", $iid);
         try {
             $stmt->execute();
             if($stmt->fetch(PDO::FETCH_OBJ)->c <= 0) {
-                $this->vInsert($uid, $iid);
+                $this->vInsert($iid);
             }
             return 1;
         } catch (PDOException $e) {
@@ -371,10 +386,10 @@ class Usuario {
         }
     }
 
-    public function vEdit($uid, $iid) {
+    public function vEdit($iid) {
         $query = "UPDATE versus SET hp_atual = :hp WHERE usuario_id = :uid AND inimigo_id = :iid ;";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":uid", $uid);
+        $stmt->bindParam(":uid", $this->id);
         $stmt->bindParam(":iid", $iid);
         $stmt->bindParam(":hp", $hp);
         try {
@@ -386,10 +401,10 @@ class Usuario {
         }
     }
 
-    public function vInsert($uid, $iid) {
+    public function vInsert($iid) {
         $query = "INSERT INTO versus VALUES(:iid, :uid, (SELECT hp_maximo FROM inimigo WHERE id = :iid)) ;";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":uid", $uid);
+        $stmt->bindParam(":uid", $this->id);
         $stmt->bindParam(":iid", $iid);
         try {
             $stmt->execute();
@@ -400,11 +415,11 @@ class Usuario {
         }
     }
 
-    public function viewVersus($id, $uid) {
+    public function viewVersus($id) {
         $query = "SELECT * FROM inimigo, versus WHERE id = :id AND id = inimigo_id AND usuario_id = :uid;";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":uid", $uid);
+        $stmt->bindParam(":uid", $this->id);
         try {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_OBJ);
@@ -468,6 +483,50 @@ class Usuario {
         try {
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
+    public function existeU($email, $senha) {
+        $query = "SELECT id FROM usuario WHERE email = :email AND senha = :senha ;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":senha", $senha);
+        try {
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            if(!is_null($result)) {
+                return $result->id;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
+    public function exists() {
+        $query = "SELECT id FROM usuario WHERE id = :id ;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $this->id);
+        try {
+            $stmt->execute();
+            return is_numeric($stmt->fetch(PDO::FETCH_OBJ)->id);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
+
+    public function admin() {
+        $query = "SELECT niveldeacesso FROM usuario WHERE id = :id ;";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $this->id);
+        try {
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_OBJ)->niveldeacesso != '0';
         } catch (PDOException $e) {
             echo $e->getMessage();
             return null;

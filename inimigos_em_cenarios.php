@@ -1,8 +1,8 @@
 <?php
 require_once 'php/usuario.php';
 require_once 'php/adm.php';
+require_once 'session_a.php';
 
-$usuario = new Usuario();
 $admin = new Admin();
 $u = $usuario->view();
 $p = $usuario->viewAtivo();
@@ -34,7 +34,7 @@ include_once 'header-adm.php';
 			<li><a href="habilidades.php"><em class="fa fa-diagnoses">&nbsp;</em> Habilidades</a></li>
 			<li><a href="inimigos.php"><em class="fa fa-skull">&nbsp;</em> Inimigos</a></li>
 			<li class="active"><a href="inimigos_em_cenarios.php"><em class="fa fa-map-marked-alt">&nbsp;</em> Cenários</a></li>
-			<li><a href="login.html"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
+			<li><a href="login.php"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
 		</ul>
 	</div><!--/.sidebar-->
 	
@@ -112,7 +112,7 @@ include_once 'header-adm.php';
 					    <tr>
 					      <th scope="col">ID</th>
 					      <th scope="col">Nome</th>
-					      <th scope="col">Dificuldade</th>
+					      <th scope="col">Dif.</th>
 					      <th scope="col">Editar</th>
 					    </tr>
 					  </thead>
@@ -125,8 +125,8 @@ include_once 'header-adm.php';
 					      <td><?php echo $cnr[$i]->nome ?></td>
 					      <td><?php echo $cnr[$i]->dificuldade ?></td>
 					      <td>
-							<button class="btn btn-primary" onclick="appear('eRaca<?php echo $cnr[$i]->id ?>');">Editar</button>
-							<button class="btn btn-danger" onclick="appear('dRaca<?php echo $cnr[$i]->id ?>');">Excluir</button>
+							<button class="btn btn-sm btn-primary" onclick="appear('eRaca<?php echo $cnr[$i]->id ?>');">Editar</button>
+							<button class="btn btn-sm btn-danger" onclick="appear('dRaca<?php echo $cnr[$i]->id ?>');">Excluir</button>
 					    </tr>
 						<?php } ?>
 					  </tbody>

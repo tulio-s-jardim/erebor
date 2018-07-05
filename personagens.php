@@ -1,7 +1,7 @@
 <?php
 require_once 'php/usuario.php';
+require_once 'session_u.php';
 
-$usuario = new Usuario();
 $u = $usuario->view();
 $p = $usuario->viewAtivo();
 $prs = $usuario->viewPersonagens();
@@ -29,10 +29,10 @@ include_once 'header.php';
 		<ul class="nav menu">
 			<li><a <?php if(!empty($p->id)) echo 'href="index.php"' ?> ><em class="fa fa-address-card">&nbsp;</em> Home</a></li>
 			<li class="active"><a href="personagens.php"><em class="fa fa-address-book">&nbsp;</em> Personagens</a></li>
-			<li><a <?php if(!empty($p->id)) echo 'href="atributos.php"' ?> ><em class="fa fa-diagnoses">&nbsp;</em> Habilidades/Atributos</a></li>
+			<li><a <?php if(!empty($p->id)) echo 'href="atributos.php"' ?> ><em class="fa fa-diagnoses">&nbsp;</em> Atributos</a></li>
 			<li><a <?php if(!empty($p->id)) echo 'href="cenarios.php"' ?> ><em class="fa fa-map-marked-alt">&nbsp;</em> Cenários</a></li>
 			<li><a <?php if(!empty($p->id)) echo 'href="estatisticas.php"' ?> ><em class="fa fa-chart-bar">&nbsp;</em> Estatísticas</a></li>
-			<li><a <?php if(!empty($p->id)) echo 'href="login.php"' ?> ><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
+			<li><a href="login.php"><em class="fa fa-power-off">&nbsp;</em> Desconectar</a></li>
 		</ul>
 	</div><!--/.sidebar-->
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
@@ -57,7 +57,7 @@ include_once 'header.php';
 							<h2><b>Personagens</b></h2>
 							<?php if(empty($p->id)) { ?>
 							<div class="col-md-12 panel-red titleC">
-							<h2><b>Seu último personagem morreu durante batalha. Escolha outro para continuar.</b></h2>
+							<h2><b>No momento você não possui personagens ativos.</b></h2>
 							</div>
 							<?php } ?>
 							<?php 
@@ -86,10 +86,11 @@ include_once 'header.php';
 					</form>
 								<div class="row progress-labels">
 									<div class="col-sm-6"><?php echo $prs[$i]->raca; ?></div>
-									<div class="col-sm-6" style="text-align: right;"><?php echo $prs[$i]->experiencia; ?>%</div>
+									<div class="col-sm-6" style="text-align: right;"><?php echo 
+									round(($prs[$i]->experiencia*100)/(100 + 30*($prs[$i]->nivel-1) + 3*($prs[$i]->nivel-1)*($prs[$i]->nivel-1))); ?>%</div>
 								</div>
 								<div class="progress">
-									<div data-percentage="0%" style="width: <?php echo $prs[$i]->experiencia; ?>%;" class="progress-bar progress-bar-blue" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+									<div data-percentage="0%" style="width: <?php echo ($prs[$i]->experiencia*100)/(100 + 30*($prs[$i]->nivel-1) + 3*($prs[$i]->nivel-1)*($prs[$i]->nivel-1)); ?>%;" class="progress-bar progress-bar-blue" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
 								</div>
 							</div>
 							<?php } ?>
@@ -100,7 +101,7 @@ include_once 'header.php';
 									<div class="row">
 									<div class="col-md-6">
 									<h3>Nome do Personagem: </h3>
-									<input type="text" name="nome" maxlength="12" style="width:100%">
+									<input type="text" name="nome" maxlength="28" style="width:100%">
 									</div>
 									<div class="col-md-6">
 									<h3>Raça: </h3>

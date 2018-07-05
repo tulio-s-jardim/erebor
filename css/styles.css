@@ -1094,3 +1094,15 @@ p.back-link {
 input, select {
   width: 100%;
 }
+
+.loginb {
+  background: rgb(210,136,50);
+}
+
+.login-panel {
+  background-color: #ddd890;
+}
+
+.login-panel > .panel-heading {
+  background-color: #d6d3a4;
+}

@@ -11,7 +11,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema dragao_de_erebor
 -- -----------------------------------------------------
-DROP SCHEMA `dragao_de_erebor`;
 CREATE SCHEMA IF NOT EXISTS `dragao_de_erebor` DEFAULT CHARACTER SET utf8 ;
 USE `dragao_de_erebor` ;
 
@@ -213,9 +212,9 @@ CREATE TRIGGER `dragao_de_erebor`.`subir_nivel`
 BEFORE UPDATE ON `dragao_de_erebor`.`personagem`
 FOR EACH ROW
 BEGIN
-	IF 	(NEW.experiencia > 99) THEN
+	IF 	(NEW.experiencia > 100 + 30*(OLD.nivel-1) + 3*(OLD.nivel-1)*(OLD.nivel-1)) THEN
 		SET NEW.nivel = NEW.nivel+1;
-		SET NEW.experiencia = (NEW.experiencia-100);
+		SET NEW.experiencia = (NEW.experiencia-(100 + 30*(OLD.nivel-1) + 3*(OLD.nivel-1)*(OLD.nivel-1)));
 		SET NEW.pontos_de_atributo = OLD.pontos_de_atributo + 5;
 		SET NEW.hp = 300 + 25*OLD.nivel;
         SET NEW.mana = 100 + 15*OLD.nivel;
@@ -253,9 +252,9 @@ BEGIN
     END IF;
 END$$
 
-
 DELIMITER ;
 
+SET GLOBAL event_scheduler = ON;
 CREATE EVENT loginDiario
   ON SCHEDULE
     AT ('2018-06-29 00:00:00'+ INTERVAL 1 DAY) ON COMPLETION PRESERVE ENABLE 
